@@ -13,8 +13,9 @@ public class Door : MonoBehaviour {
     float DoorCloseAngle = 0.0f;
 	public AudioSource asource;
 	public AudioClip openDoor,closeDoor;
-	// Use this for initialization
-	void Start () {
+    public Transform teleportPoint; // Punto di teletrasporto (inizio stanza)
+                                        // Use this for initialization
+        void Start () {
 		asource = GetComponent<AudioSource> ();
 	}
 	
@@ -38,6 +39,21 @@ public class Door : MonoBehaviour {
 		open =!open;
 		asource.clip = open?openDoor:closeDoor;
 		asource.Play ();
+	}
+
+	private void OnTriggerEnter(Collider other)
+	{
+		if (other.CompareTag("Player")) // Assicurati che il player abbia il tag "Player"
+		{
+			CharacterController cc = other.GetComponent<CharacterController>();
+			if (cc != null)
+			{
+				cc.enabled = false; // Disabilita CharacterController per evitare problemi di collisione
+				other.transform.position = teleportPoint.position;
+				other.transform.rotation = teleportPoint.rotation;
+				cc.enabled = true; // Riabilita il CharacterController
+			}
+		}
 	}
 }
 }
