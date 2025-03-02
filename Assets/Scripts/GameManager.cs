@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DoorScript;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -10,6 +11,8 @@ public class GameManager : MonoBehaviour
     private Vector3 posizioneCorridoio;
     private Vector3 rotazioneCorridoio;
     int index = 0;
+    private Door doorScript2;
+    private Door doorScript1;
 
     private List<GameObject> corridoi = new List<GameObject>();
 
@@ -38,7 +41,7 @@ public class GameManager : MonoBehaviour
         GameObject nuovoCorridoio = null;
         if (colliderName == "GenerateRoomDestra")
         {
-            GameObject spawnerDestro = corridoi.ElementAt(corridoi.Count-1).transform.Find("SpawnerDestro")?.gameObject;
+            GameObject spawnerDestro = corridoi.ElementAt(corridoi.Count - 1).transform.Find("SpawnerDestro")?.gameObject;
             posizioneCorridoio = spawnerDestro.transform.position;
             rotazioneCorridoio += new Vector3(0f, 90f, 0f); // Ruota di 90° per ogni nuovo corridoio
             nuovoCorridoio = Instantiate(CorridoioConnesso, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
@@ -80,5 +83,36 @@ public class GameManager : MonoBehaviour
         GameObject spawnerSinistro = corridoi.ElementAt(corridoi.Count - 1).transform.Find("SpawnerSinistro")?.gameObject;
         posizioneCorridoio = spawnerSinistro.transform.position;
         rotazioneCorridoio -= new Vector3(0f, -90f, 0f); // Ruota di 90° per ogni nuovo corridoio
+    }
+
+    public void ChiudiPorta()
+    {
+        StartCoroutine(WaitChiudiPorta());  
+    }
+
+    IEnumerator WaitChiudiPorta()
+    {
+        GameObject door_1 = corridoi.ElementAt(corridoi.Count - 2).transform.Find("Door_1")?.gameObject;
+        GameObject door1 = door_1.transform.Find("Door")?.gameObject;
+        doorScript1 = door1.GetComponent<Door>();
+        GameObject door_2 = corridoi.ElementAt(corridoi.Count - 2).transform.Find("Door_2")?.gameObject;
+        GameObject door2 = door_2.transform.Find("Door")?.gameObject;
+        doorScript2 = door2.GetComponent<Door>();
+        if (doorScript2.open)
+        {
+            doorScript2.OpenDoor();
+            yield return new WaitForSeconds(0.7f);
+        }
+        doorScript2.openDoor = null;
+        doorScript2.closeDoor = null;
+        doorScript2.enabled = false;
+        if (doorScript1.open)
+        {
+            doorScript1.OpenDoor();
+            yield return new WaitForSeconds(0.7f);
+        }
+        doorScript1.openDoor = null;
+        doorScript1.closeDoor = null;
+        doorScript1.enabled = false;
     }
 }

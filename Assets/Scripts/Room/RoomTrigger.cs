@@ -42,6 +42,12 @@ public class RoomTrigger : MonoBehaviour
                     doorScript1.OpenDoor();
                 }
             }
+            else if (gameObject.name == "ChiudiPorta")
+            {
+                gameManager.ChiudiPorta();
+                gameObject.SetActive(false);
+            }
+
             collider.SetActive(true);
             gameManager.function(gameObject.name); // Chiamata alla funzione per generare il corridoio
             gameObject.SetActive(false);
