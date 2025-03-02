@@ -543,8 +543,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a9ed6d049215184eab3210d15daf21e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Corridoio: {fileID: 6078035050354815487, guid: d8365f626608066468b26ff851454ec8, type: 3}
-  CorridoioConnesso: {fileID: 8473224352133577414, guid: b743cfb6c05e45b48b95bcaa203b193f, type: 3}
+  Corridoio: {fileID: 1133462253048660923, guid: 97cd20e57cba1f7449a9ff00224d6a05, type: 3}
+  CorridoioConnesso: {fileID: 6876189384554583205, guid: 62a742f1c176d7d4488bc3d4cbb62024, type: 3}
 --- !u!1001 &1529725254
 PrefabInstance:
   m_ObjectHideFlags: 0

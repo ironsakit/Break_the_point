@@ -1,8 +1,10 @@
 using DoorScript;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class RoomTrigger : MonoBehaviour
 {
+    public GameObject Corridoio;
     private GameObject Manager;
     private GameManager gameManager;
     public GameObject collider;
@@ -15,10 +17,10 @@ public class RoomTrigger : MonoBehaviour
     {
         Manager = GameObject.Find("GameManager");
         gameManager = Manager?.GetComponent<GameManager>();
-        door_2 = GameObject.Find("Door_2");
+        door_2 = Corridoio.transform.Find("Door_2")?.gameObject;
         GameObject door = door_2.transform.Find("Door")?.gameObject;
         doorScript2 = door.GetComponent<Door>();
-        door_1 = GameObject.Find("Door_1");
+        door_1 = Corridoio.transform.Find("Door_1")?.gameObject;
         GameObject door1 = door_1.transform.Find("Door")?.gameObject;
         doorScript1 = door1.GetComponent<Door>();
     }
