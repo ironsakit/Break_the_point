@@ -7,8 +7,6 @@ public class MusicManager : MonoBehaviour
 
     [SerializeField] private AudioSource soundFXObject;
     private AudioSource audioSource;
-    private float timePaused = 0f;
-    private bool isPaused = false;
 
     private void Awake()  //in questo modo possiamo chiamarlo ovunque senza un GameObject
     {
@@ -22,7 +20,7 @@ public class MusicManager : MonoBehaviour
         }
     }
 
-    public void PlaySoundFXClip(AudioClip audioClip, Transform spawnTransform, float volume)
+    public void PlayMusic(AudioClip audioClip, Transform spawnTransform, float volume)
     {
 
         //Spawn in gameObject
@@ -38,25 +36,15 @@ public class MusicManager : MonoBehaviour
         Destroy(audioSource.gameObject, clipLength);
     }
 
-    public void StopStartSoundFXClip()
+    public void StopMusic()
     {
         if (audioSource != null && audioSource.isPlaying)
         {
-            // Memorizza il tempo della traccia e mettila in pausa
-            timePaused = audioSource.time;
-            audioSource.Pause();
-            isPaused = true;
-        }
-        else if (isPaused)
-        {
-            audioSource.time = timePaused;
-            //PLay the sound
-            audioSource.Play();
-            isPaused = false;
+            DestroyMusic();
         }
     }
 
-    public void DestroySound()
+    public void DestroyMusic()
     {
         audioSource.Stop();
         Destroy(audioSource);

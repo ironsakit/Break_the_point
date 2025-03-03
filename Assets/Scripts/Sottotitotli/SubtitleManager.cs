@@ -11,6 +11,7 @@ public class SubtitleManager : MonoBehaviour
     public Transform Canvas;
     private RectTransform panelRectTransform;
     [SerializeField] private float typingSpeed = 0.05f;
+    
 
     private GameObject currentSubtitlePanel;
 

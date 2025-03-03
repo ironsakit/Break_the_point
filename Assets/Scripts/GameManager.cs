@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
     private Door doorScript1;
     public int livello = 0;
     public bool Domanda = false;
+    [SerializeField] private AudioClip[] Music;
+    public int PrimaParte = 0, SecondaParte = 1, TerzaParte = 19, UltimaParte = 20;
+    private bool SecondaMusica = false;
 
     private List<GameObject> corridoi = new List<GameObject>();
 
@@ -71,6 +74,7 @@ public class GameManager : MonoBehaviour
         rotazioneCorridoio = new Vector3(-90f, 0f, 0f);  // Rotazione iniziale del corridoio
         GameObject gameObject = Instantiate(Corridoio, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
         corridoi.Add(gameObject);
+        MusicManager.instance.PlayMusic(Music[0], transform, 0.7f);
     }
 
     // Update is called once per frame
@@ -102,7 +106,7 @@ public class GameManager : MonoBehaviour
         {
             nuovoCorridoio = Instantiate(CorridoioConnesso, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
         }
-        else if (livello >= 2 && livello <= 13)
+        else if (livello >= 2 && livello <= SecondaParte)
         {
             nuovoCorridoio = Instantiate(CorridoioConnessoLivello10, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
         }
@@ -158,15 +162,21 @@ public class GameManager : MonoBehaviour
     }
 
     public void ChiudiPorta()
-    {
+    {   
         StartCoroutine(WaitChiudiPorta());
         StartCoroutine(sottotitoli(voiceLines[livello], 1f));
-        Domanda = true;
         livello++;
     }
 
     IEnumerator WaitChiudiPorta()
     {
+        Domanda = true;
+        if(livello >= 1 && !SecondaMusica){
+            MusicManager.instance.StopMusic();  // Fermo tutto
+            MusicManager.instance.PlayMusic(Music[1], transform, 0.7f);   // Faccio partire la prossima canzone
+            SecondaMusica = false;
+        }
+        
         GameObject door_1 = corridoi.ElementAt(corridoi.Count - 2).transform.Find("Door_1")?.gameObject;
         GameObject door1 = door_1.transform.Find("Door")?.gameObject;
         doorScript1 = door1.GetComponent<Door>();

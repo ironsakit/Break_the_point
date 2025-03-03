@@ -16,7 +16,7 @@ public class Luci : MonoBehaviour
         tempo += Time.deltaTime;
 
         // Se è passato più di 3 secondi e la coroutine non è già in esecuzione, la avvia
-        if (tempo >= 3f && !isCoroutineRunning)
+        if (tempo >= 1f && !isCoroutineRunning)
         {
             tempo = 0f; // Reset del timer per ricominciare il ciclo
             StartCoroutine(cambiaIntensita());
