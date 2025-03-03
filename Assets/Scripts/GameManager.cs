@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,14 +9,61 @@ public class GameManager : MonoBehaviour
 {
     public GameObject Corridoio;
     public GameObject CorridoioConnesso;
+    public GameObject CorridoioConnessoLivello10;
+
     private Vector3 posizioneCorridoio;
     private Vector3 rotazioneCorridoio;
-    int index = 0;
     private Door doorScript2;
     private Door doorScript1;
+    public int livello = 0;
+    public bool Domanda = false;
 
     private List<GameObject> corridoi = new List<GameObject>();
 
+    String[] voiceLines = {
+            "Welcome. Your choices matter. Choose wisely.",
+            "Left or right? A simple choice, isn't it?",
+            "Your decisions define you.",
+            "Some choices have consequences. But not yet.",
+            "You're doing well. Or are you?",
+            "Wait... Haven't you been here before?",
+            "You're making progress. But towards what?",
+            "Does this feel real to you?",
+            "What if the right choice is neither left nor right?",
+            "You're not supposed to be here. And yet, you keep going.",
+            "Why do you keep trying? There is no way out.",
+            "You're not choosing. You're obeying.",
+            "Does it even matter? You will return here again.",
+            "The walls are closing in. Can you feel it?",
+            "You don’t remember, do you? How many times have you been here?",
+            "You were warned. But you never listen.",
+            "This place... It was made for you.",
+            "You don’t belong here. And yet, you fit so perfectly.",
+            "Turn back. Oh wait, you can't."
+        };
+
+    public String[] questions = {
+        "Qual è il numero successivo?",
+        "Quale animale NON può volare?",
+        "Quanti mesi hanno 28 giorni?",
+        "Il sole è una...?",
+        "Quanto fa 2+2?",
+        "Quale elemento chimico è essenziale per respirare?",
+        "Quale di questi è un colore primario?",
+        "Quale senso viene usato per ascoltare?",
+        "Se hai 6 mele e ne dai 4, quante te ne restano?",
+        "Chi ha scritto 'Romeo e Giulietta'?",
+        "Qual è la cosa più reale?",
+        "Dove sei ora?",
+        "Il tempo scorre...?",
+        "Cosa significa 'uscire'?",
+        "Cosa c'è dietro questa porta?",
+        "Quale porta devi scegliere?",
+        "Perché continui?",
+        "Chi ti sta parlando?",
+        "Cosa succede se smetti di giocare?",
+        "Qual è la domanda iniziale?"
+    };
     void Start()
     {
         // Inizializza la posizione del primo corridoio
@@ -27,13 +75,39 @@ public class GameManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {   
+        if(livello == 0)
+        {   
+            StartCoroutine(sottotitoli(voiceLines[livello], 1f));
+            livello++;
+        }
+
         // Assicurati che ci siano almeno 3 corridoi prima di tentare di rimuovere uno
         if (corridoi.Count > 3)
-        {
+        {   
             Destroy(corridoi[0]);  // Distruggi il corridoio più vecchio
             corridoi.RemoveAt(0);  // Rimuovilo dalla lista
         }
+    }
+
+    IEnumerator sottotitoli(string text, float waitSeconds)
+    {
+        yield return new WaitForSeconds(waitSeconds);
+        yield return SubtitleManager.instance.PlaySubtitle(text, 1f);
+    }
+
+    private void CreaStanza(GameObject nuovoCorridoio)
+    {
+        if (livello <= 1)
+        {
+            nuovoCorridoio = Instantiate(CorridoioConnesso, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
+        }
+        else if (livello >= 2 && livello <= 13)
+        {
+            nuovoCorridoio = Instantiate(CorridoioConnessoLivello10, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
+        }
+
+        corridoi.Add(nuovoCorridoio);
     }
 
     public void function(string colliderName)
@@ -44,16 +118,14 @@ public class GameManager : MonoBehaviour
             GameObject spawnerDestro = corridoi.ElementAt(corridoi.Count - 1).transform.Find("SpawnerDestro")?.gameObject;
             posizioneCorridoio = spawnerDestro.transform.position;
             rotazioneCorridoio += new Vector3(0f, 90f, 0f); // Ruota di 90° per ogni nuovo corridoio
-            nuovoCorridoio = Instantiate(CorridoioConnesso, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
-            corridoi.Add(nuovoCorridoio);
+            CreaStanza(nuovoCorridoio);
         }
         else if (colliderName == "GenerateRoomSinistra")
         {
             GameObject spawnerSinistro = corridoi.ElementAt(corridoi.Count - 1).transform.Find("SpawnerSinistro")?.gameObject;
             posizioneCorridoio = spawnerSinistro.transform.position;
             rotazioneCorridoio += new Vector3(0f, -90f, 0f); // Ruota di 90° per ogni nuovo corridoio
-            nuovoCorridoio = Instantiate(CorridoioConnesso, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
-            corridoi.Add(nuovoCorridoio);
+            CreaStanza(nuovoCorridoio);
         }
         else if (colliderName == "DestroyRoomDestra")
         {
@@ -87,7 +159,10 @@ public class GameManager : MonoBehaviour
 
     public void ChiudiPorta()
     {
-        StartCoroutine(WaitChiudiPorta());  
+        StartCoroutine(WaitChiudiPorta());
+        StartCoroutine(sottotitoli(voiceLines[livello], 1f));
+        Domanda = true;
+        livello++;
     }
 
     IEnumerator WaitChiudiPorta()
