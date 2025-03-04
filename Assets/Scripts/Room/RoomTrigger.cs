@@ -1,5 +1,6 @@
+using System.Collections;
 using DoorScript;
-using Unity.VisualScripting;
+using TMPro;
 using UnityEngine;
 
 public class RoomTrigger : MonoBehaviour
@@ -12,6 +13,12 @@ public class RoomTrigger : MonoBehaviour
     private Door doorScript2;
     private GameObject door_1;
     private Door doorScript1;
+    private TextMeshPro Domanda; // Reference for the 3D TextMeshPro component
+    private QuestionManager questionManager;
+    private TextMeshPro RispostaSinistra; // Reference for the 3D TextMeshPro component
+    private QuestionManager questionManagerSinistra;
+    private TextMeshPro RispostaDestra; // Reference for the 3D TextMeshPro component
+    private QuestionManager questionManagerDestra;
 
     void Start()
     {
@@ -23,21 +30,34 @@ public class RoomTrigger : MonoBehaviour
         door_1 = Corridoio.transform.Find("Door_1")?.gameObject;
         GameObject door1 = door_1.transform.Find("Door")?.gameObject;
         doorScript1 = door1.GetComponent<Door>();
+
+        Transform TransformDomanda = Corridoio.transform.Find("Domanda");
+        Domanda = TransformDomanda.GetComponent<TextMeshPro>(); // Get the 3D TextMeshPro component
+        questionManager = Domanda.GetComponent<QuestionManager>();
+
+        Transform TransformRispostaSinistra = Corridoio.transform.Find("RispostaSinistra");
+        RispostaSinistra = TransformRispostaSinistra.GetComponent<TextMeshPro>(); // Get the 3D TextMeshPro component
+        questionManagerSinistra = RispostaSinistra.GetComponent<QuestionManager>();
+
+        Transform TransformRispostaDestra = Corridoio.transform.Find("RispostaDestra");
+        RispostaDestra = TransformRispostaDestra.GetComponent<TextMeshPro>(); // Get the 3D TextMeshPro component
+        questionManagerDestra = RispostaDestra.GetComponent<QuestionManager>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.name == "Player") // Verifica che il trigger non sia già stato attivato
-        {   
-            if(gameObject.name == "DestroyRoomSinistra")
+        if (other.gameObject.name == "Player")
+        {
+            if (gameObject.name == "DestroyRoomSinistra")
             {
-                if (doorScript2.open)
+                if (doorScript2 != null && doorScript2.open)
                 {
                     doorScript2.OpenDoor();
                 }
-            }else if (gameObject.name == "DestroyRoomDestra")
+            }
+            else if (gameObject.name == "DestroyRoomDestra")
             {
-                if (doorScript1.open)
+                if (doorScript1 != null && doorScript1.open)
                 {
                     doorScript1.OpenDoor();
                 }
@@ -47,10 +67,29 @@ public class RoomTrigger : MonoBehaviour
                 gameManager.ChiudiPorta();
                 gameObject.SetActive(false);
             }
+            else if (gameObject.name == "GeneraDomanda")
+            {
+                if (questionManager != null && gameManager != null)
+                {
+                    StartCoroutine(questionManager.PlayQuestion(gameManager.questions[gameManager.livello]));
+                    StartCoroutine(questionManagerSinistra.PlayQuestion(gameManager.leftAnswers[gameManager.livello]));
+                    StartCoroutine(questionManagerDestra.PlayQuestion(gameManager.rightAnswers[gameManager.livello]));
+                }
+                gameObject.SetActive(false);
+            }
 
-            collider.SetActive(true);
-            gameManager.function(gameObject.name); // Chiamata alla funzione per generare il corridoio
-            gameObject.SetActive(false);
+            if (gameObject.name != "GeneraDomanda")
+            {
+                if (collider != null)
+                {
+                    collider.SetActive(true);
+                }
+                if (gameManager != null)
+                {
+                    gameManager.function(gameObject.name);
+                }
+                gameObject.SetActive(false);
+            }
         }
     }
 }

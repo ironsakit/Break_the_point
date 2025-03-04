@@ -20,9 +20,8 @@ public class MusicManager : MonoBehaviour
         }
     }
 
-    public void PlayMusic(AudioClip audioClip, Transform spawnTransform, float volume)
+    public AudioSource PlayMusic(AudioClip audioClip, Transform spawnTransform, float volume)
     {
-
         //Spawn in gameObject
         audioSource = Instantiate(soundFXObject, spawnTransform.position, Quaternion.identity);
         //assign audioClip
@@ -33,7 +32,7 @@ public class MusicManager : MonoBehaviour
         //get length of sound FX volume
         float clipLength = audioSource.clip.length;
         //Destroy
-        Destroy(audioSource.gameObject, clipLength);
+        return audioSource;
     }
 
     public void StopMusic()
