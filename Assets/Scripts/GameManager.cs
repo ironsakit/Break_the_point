@@ -185,7 +185,7 @@ public class GameManager : MonoBehaviour
         GameObject nuovoCorridoio = null;
         if (livello <= 1)
         {
-            nuovoCorridoio = Instantiate(CorridoioConnesso, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
+            nuovoCorridoio = Instantiate(CorridoioConnessoLivello15, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
         }
         else if (livello >= 2 && livello < 4)
         {

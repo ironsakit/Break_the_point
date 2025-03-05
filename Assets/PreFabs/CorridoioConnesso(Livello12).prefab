@@ -1644,7 +1644,7 @@ GameObject:
   - component: {fileID: 1009304176894750990}
   - component: {fileID: 2369183349685053984}
   m_Layer: 0
-  m_Name: CorridoioConnesso(Livello10) 1
+  m_Name: CorridoioConnesso(Livello12)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

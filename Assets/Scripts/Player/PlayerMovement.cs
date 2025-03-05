@@ -37,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         OpendDoor();
+        TurnSwitch();
         // Gestisci il movimento del mouse
         MouseLook();
         // Gestisci il movimento del giocatore
@@ -54,6 +55,21 @@ public class PlayerMovement : MonoBehaviour
                 {
                     hit.transform.GetComponent<DoorScript.Door>().OpenDoor();
                     doorOpen = true;
+                }
+            }
+        }
+    }
+
+    void TurnSwitch()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.forward, out hit, DistanceOpen))
+        {
+            if (hit.transform.GetComponent<SwitchScript.SwitchComponent>())
+            {
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    hit.transform.GetComponent<SwitchScript.SwitchComponent>().TurnOnOff();
                 }
             }
         }
