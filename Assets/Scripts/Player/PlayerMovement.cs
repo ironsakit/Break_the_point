@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Reflection;
+using DoorScript;
 using Unity.Mathematics.Geometry;
 using UnityEngine;
 
@@ -26,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
     public bool canMove = false;
     private CharacterController characterController;
     public bool doorOpen = false;
+    public GameObject banner;
 
     void Start()
     {
@@ -51,14 +54,20 @@ public class PlayerMovement : MonoBehaviour
         {
             if (hit.transform.GetComponent<DoorScript.Door>())
             {
+                banner.SetActive(true);
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     hit.transform.GetComponent<DoorScript.Door>().OpenDoor();
                     doorOpen = true;
                 }
-            }
+            }   
+        }
+        else
+        {
+            banner.SetActive(false);
         }
     }
+
 
     void TurnSwitch()
     {
@@ -67,11 +76,16 @@ public class PlayerMovement : MonoBehaviour
         {
             if (hit.transform.GetComponent<SwitchScript.SwitchComponent>())
             {
-                if (Input.GetKeyDown(KeyCode.Q))
+                banner.SetActive(true);
+                if (Input.GetKeyDown(KeyCode.E))
                 {
                     hit.transform.GetComponent<SwitchScript.SwitchComponent>().TurnOnOff();
                 }
-            }
+            } 
+        }
+        else
+        {
+            banner.SetActive(false);
         }
     }
 

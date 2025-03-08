@@ -75,6 +75,15 @@ public class RoomTrigger : MonoBehaviour
                     StartCoroutine(questionManagerSinistra.PlayQuestion(gameManager.leftAnswers[gameManager.livello]));
                     StartCoroutine(questionManagerDestra.PlayQuestion(gameManager.rightAnswers[gameManager.livello]));
                 }
+                if(gameManager.livello == 7 && gameManager.evento)
+                {
+                    gameManager.AvviaLivello7();
+                    gameManager.evento = false;
+                }else if (gameManager.livello == 9 && gameManager.evento)
+                {
+                    gameManager.AvviaLivello9();
+                    gameManager.evento = false;
+                }
                 gameObject.SetActive(false);
             }
 

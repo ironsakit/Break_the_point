@@ -1784,6 +1784,7 @@ MonoBehaviour:
   - {fileID: 1308475666154681187}
   - {fileID: 8789961891683091434}
   - {fileID: 8744075754222633193}
+  livello7: 0
 --- !u!1 &2357977572480363427
 GameObject:
   m_ObjectHideFlags: 0

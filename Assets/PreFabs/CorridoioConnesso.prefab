@@ -3237,6 +3237,7 @@ GameObject:
   - component: {fileID: 5734231937014695820}
   - component: {fileID: 772768787102813052}
   - component: {fileID: 8616060504511170168}
+  - component: {fileID: 647519451505037490}
   m_Layer: 0
   m_Name: CorridoioConnesso
   m_TagString: Untagged
@@ -3354,6 +3355,31 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -5495902117074765545, guid: 14edddfc5e72dcb4d99c4bf03ccb91c6, type: 3}
+--- !u!114 &647519451505037490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5409929633415343881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50e70f7ee8ec17540905b1b3465ea807, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SpotLights:
+  - {fileID: 6683562541775029806}
+  - {fileID: 2081602581298248184}
+  - {fileID: 7281825023503211343}
+  - {fileID: 2089939779760892936}
+  - {fileID: 9192255405369012180}
+  - {fileID: 8630260026101116011}
+  - {fileID: 9017608149188036879}
+  - {fileID: 7872462034194571116}
+  - {fileID: 2428263594432663968}
+  - {fileID: 3184465506656933522}
+  - {fileID: 4996196090526143806}
+  livello7: -1
 --- !u!1 &5422311812497417532
 GameObject:
   m_ObjectHideFlags: 0

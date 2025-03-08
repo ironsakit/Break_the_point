@@ -23,12 +23,12 @@ public class SubtitleManager : MonoBehaviour
         }
     }
 
-    public IEnumerator PlaySubtitle(string text, float duration)
+    public IEnumerator PlaySubtitle(string text, float duration, Color color)
     {
-        yield return StartCoroutine(TypeSubtitle(text, duration)); // Aspetta che il sottotitolo finisca
+        yield return StartCoroutine(TypeSubtitle(text, duration, color)); // Aspetta che il sottotitolo finisca
     }
 
-    private IEnumerator TypeSubtitle(string text, float duration)
+    private IEnumerator TypeSubtitle(string text, float duration, Color color)
     {
         // Instanzia il prefab come figlio del Canvas
         currentSubtitlePanel = Instantiate(subtitlePrefab, Canvas.transform);
@@ -39,6 +39,7 @@ public class SubtitleManager : MonoBehaviour
 
         currentSubtitlePanel.SetActive(true); // Mostra il pannello
         subtitleText.text = ""; // Svuota il testo
+        subtitleText.color = color;
 
         float panelWidthIncrement = 45f; // Incrementa la larghezza
 
