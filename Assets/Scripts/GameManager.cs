@@ -6,15 +6,20 @@ using DoorScript;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public GameObject Corridoio;
     public GameObject CorridoioConnesso;
+    public GameObject CorridoioConnessoLivello5;
     public GameObject CorridoioConnessoLivello7;
     public GameObject CorridoioConnessoLivello9;
     public GameObject CorridoioConnessoLivello10;
+    public GameObject CorridoioConnessoLivello14;
     public GameObject CorridoioConnessoLivello15;
+    public GameObject CorridoioConnessoLivello17;
+    public bool jumpscare = false;
 
 
     public bool evento = true;
@@ -26,11 +31,12 @@ public class GameManager : MonoBehaviour
     public int counter = 0;
     [SerializeField] private AudioClip[] Music;
     [SerializeField] private AudioClip[] Effect;
-    private bool SecondaMusica = false;
+    public bool SecondaMusica = false;
+    private bool TerzaMusica = false;
     public AudioSource musica;
     public GameObject spawnerDestro = null, spawnerSinistro = null;
     public bool rispostaGiusta = false;
-
+    private int currentSceneIndex;
     private List<GameObject> corridoi = new List<GameObject>();
 
     string[] voiceLines = {
@@ -82,13 +88,12 @@ public class GameManager : MonoBehaviour
     "Who wrote 'Romeo and Juliet'?",
     "What is the most real thing?",
     "Where are you now?",
-    "Time flows...?",
     "What does 'to leave' mean?",
     "How many symbols are written on the walls?",
     "Which door should you choose?",
     "Why do you keep going?",
     "Who is talking to you?",
-    "What happens if you stop playing?",
+    "How many times did the light flash?",
     "What was the initial question?"
 };
 
@@ -112,8 +117,7 @@ public class GameManager : MonoBehaviour
     "10",
     "Left",
     "Because I must",
-    "No one",
-    "Everything stops",
+    "6",
     "I don't remember"
 };
 
@@ -137,8 +141,7 @@ public class GameManager : MonoBehaviour
     "A secret",
     "11",
     "I don’t know",
-    "Someone",
-    "Nothing changes",
+    "7",
     "The first one"
 };
 
@@ -150,9 +153,9 @@ public class GameManager : MonoBehaviour
     { 0, 1 }, // "The sun is a...?" -> Planet (sbagliato), Star (giusto)
     { 0, 1 }, // "What is 2+2?" -> 3 (sbagliato), 4 (giusto)
     { 0, 1 }, // "Which chemical element is essential for breathing?" -> Carbon (sbagliato), Oxygen (giusto)
-    { 0, 1 }, // "Which of these is a primary color?" -> Green (sbagliato), Red (giusto)
+    { 1, 0 }, // "Which of these is a primary color?" -> Green (sbagliato), Red (giusto)
     { 0, 1 }, // "Which sense is used to hear?" -> Taste (sbagliato), Hearing (giusto)
-    { 1, 0 }, // "If you have 6 apples and give away 4, how many do you have left?" -> 2 (giusto), 6 (sbagliato)
+    { 0, 1 }, // "If you have 6 apples and give away 4, how many do you have left?" -> 2 (giusto), 6 (sbagliato)
     { 1, 0 }, // "Who wrote 'Romeo and Juliet'?" -> Shakespeare (giusto), Dante (sbagliato)
     { 1, 0 }, // "What is the most real thing?" -> Illusion (sbagliato), Your thoughts (giusto)
     { 1, 0 }, // "Where are you now?" -> Home (giusto), Nowhere (sbagliato)
@@ -160,10 +163,10 @@ public class GameManager : MonoBehaviour
     { 0, 1 }, // "What does 'to leave' mean?" -> To stay (sbagliato), To go (giusto)
     { 1, 0 }, // "What is behind this door?" -> Nothing (giusto), A secret (sbagliato)
     { 0, 0 }, // "How many symbols are written on the walls?
-    { 1, 0 }, // "Why do you keep going?" -> Because I must (giusto), I don’t know (sbagliato)
-    { 1, 0 }, // "Who is talking to you?" -> Someone (giusto), No one (sbagliato)
-    { 1, 0 }, // "What happens if you stop playing?" -> Everything stops (giusto), Nothing changes (sbagliato)
-    { 1, 0 }  // "What was the initial question?" -> The first one (giusto), I don't remember (sbagliato)
+    { 1, 0 }, // "Do you like this game?" -> Yes (giusto), No (sbagliato)
+    { 1, 0 }, // "How many times did the light flash?
+    { 1, 0 },  // "What was the initial question?" -> The first one (giusto), I don't remember (sbagliato)
+    { 1, 1 }
 };
 
 
@@ -174,109 +177,149 @@ public class GameManager : MonoBehaviour
         rotazioneCorridoio = new Vector3(-90f, 0f, 0f);  // Rotazione iniziale del corridoio
         GameObject gameObject = Instantiate(Corridoio, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
         corridoi.Add(gameObject);
-        musica = MusicManager.instance.PlayMusic(Music[0], transform, 0.7f);
-        StartCoroutine(sottotitoli(voiceLines[0], 1f, Color.white));
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex; // Ottiene l'indice della scena attuale
+        if (currentSceneIndex == 3)
+        {
+            StartCoroutine(Finale());
+        }
+        else
+        {
+            musica = MusicManager.instance.PlayMusic(Music[0], transform, 0.7f);
+            StartCoroutine(sottotitoli(voiceLines[0], 1f, Color.white));
+        }
     }
 
+    private IEnumerator Finale()
+    {
+        yield return sottotitoli("After all this time, you still don't understand.", 1f, Color.white);
+        yield return sottotitoli("That you are in an eternal cycle of suffering?", 1f, Color.white);
+        yield return sottotitoli("You are trapped here forever for your sins.", 1f, Color.white);
+        yield return sottotitoli("Enjoy this eternity in hell.", 1f, Color.red);
+        yield return sottotitoli("You never had a choice.", 1f, Color.red);
+        Luci luci = corridoi.ElementAt(corridoi.Count - 1).GetComponent<Luci>();
+        luci.livello7 = 1;
+        AudioSource eletc = MusicManager.instance.PlayMusic(Effect[2], transform, 0.4f);
+        yield return new WaitForSeconds(3f);
+        eletc.Stop();
+        luci.SpegniTutto();
+        StopAllSounds();
+        SceneManager.LoadScene(4);
+    }
+    public void StopAllSounds()
+    {
+        AudioSource[] allAudioSources = FindObjectsByType<AudioSource>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+        foreach (AudioSource audioSource in allAudioSources)
+        {
+            audioSource.Stop(); // Ferma ogni suono attivo
+        }
+    }
     // Update is called once per frame
     void Update()
-    {  
-        // Assicurati che ci siano almeno 3 corridoi prima di tentare di rimuovere uno
-        if (corridoi.Count > 3)
-        {   
-            Destroy(corridoi[0]);  // Distruggi il corridoio più vecchio
-            corridoi.RemoveAt(0);  // Rimuovilo dalla lista
-        }
+    {
+            // Assicurati che ci siano almeno 3 corridoi prima di tentare di rimuovere uno
+            if (corridoi.Count > 3)
+            {
+                Destroy(corridoi[0]);  // Distruggi il corridoio più vecchio
+                corridoi.RemoveAt(0);  // Rimuovilo dalla lista
+            }
     }
 
     private int livelloPrecedente; // Variabile per memorizzare il livello prima dell'aggiornamento
     private int counter2 = 0;
     public void function(string colliderName)
     {
-        GameObject nuovoCorridoio = null;
-
-        if (colliderName == "GenerateRoomDestra")
+        if (currentSceneIndex < 3)
         {
-            livelloPrecedente = livello; // Salva il livello attuale prima dell'aggiornamento
+            GameObject nuovoCorridoio = null;
 
-            spawnerDestro = corridoi.ElementAt(corridoi.Count - 1).transform.Find("SpawnerDestro")?.gameObject;
-            posizioneCorridoio = spawnerDestro.transform.position;
-            rotazioneCorridoio += new Vector3(0f, 90f, 0f);
-
-            if (answerMatrix[livello, 1] == 1)
+            if (colliderName == "GenerateRoomDestra" && ((livello != 16) || !jumpscare))
             {
-                livello++; // Incrementa il livello solo se la risposta è giusta
-                rispostaGiusta = true;
-                evento = true;
-                counter2 = counter;
-                counter = 0;
+                livelloPrecedente = livello; // Salva il livello attuale prima dell'aggiornamento
+
+                spawnerDestro = corridoi.ElementAt(corridoi.Count - 1).transform.Find("SpawnerDestro")?.gameObject;
+                posizioneCorridoio = spawnerDestro.transform.position;
+                rotazioneCorridoio += new Vector3(0f, 90f, 0f);
+
+                if (answerMatrix[livello, 1] == 1)
+                {
+                    livello++; // Incrementa il livello solo se la risposta è giusta
+                    rispostaGiusta = true;
+                    evento = true;
+                    counter2 = counter;
+                    counter = 0;
+                }
+                else
+                {
+                    evento = false;
+                    rispostaGiusta = false;
+                }
+
+                CreaStanza();
             }
-            else
+            else if (colliderName == "GenerateRoomSinistra")
             {
-                evento = false;
-                rispostaGiusta = false;
+                livelloPrecedente = livello; // Salva il livello attuale prima dell'aggiornamento
+
+                spawnerSinistro = corridoi.ElementAt(corridoi.Count - 1).transform.Find("SpawnerSinistro")?.gameObject;
+                posizioneCorridoio = spawnerSinistro.transform.position;
+                rotazioneCorridoio += new Vector3(0f, -90f, 0f);
+
+                if (answerMatrix[livello, 0] == 1)
+                {
+                    livello++; // Incrementa il livello solo se la risposta è giusta
+                    rispostaGiusta = true;
+                    evento = true;
+                    counter2 = counter;
+                    counter = 0;
+                }
+                else
+                {
+                    evento = false;
+                    rispostaGiusta = false;
+                }
+
+                CreaStanza();
             }
+            else if (colliderName == "DestroyRoomDestra")
+            {   
+                // Usa il livello precedente per controllare la risposta giusta
+                if (answerMatrix[livelloPrecedente, 1] == 1)
+                {   
+                    if(livello != 16)
+                    {
+                        livello--; // Decrementa il livello se la risposta era giusta
+                    }
+                    rispostaGiusta = false;
+                    evento = false;
+                    counter = counter2;
+                }
 
-            CreaStanza();
-        }
-        else if (colliderName == "GenerateRoomSinistra")
-        {
-            livelloPrecedente = livello; // Salva il livello attuale prima dell'aggiornamento
-
-            spawnerSinistro = corridoi.ElementAt(corridoi.Count - 1).transform.Find("SpawnerSinistro")?.gameObject;
-            posizioneCorridoio = spawnerSinistro.transform.position;
-            rotazioneCorridoio += new Vector3(0f, -90f, 0f);
-
-            if (answerMatrix[livello, 0] == 1)
-            {
-                livello++; // Incrementa il livello solo se la risposta è giusta
-                rispostaGiusta = true;
-                evento = true;
-                counter2 = counter;
-                counter = 0;
+                StartCoroutine(DistruggiStanza("SpawnerDestro", 90f));
             }
-            else
-            {
-                evento = false;
-                rispostaGiusta = false;
-            }
+            else if (colliderName == "DestroyRoomSinistra")
+            {   
+               
+                // Usa il livello precedente per controllare la risposta giusta
+                if (answerMatrix[livelloPrecedente, 0] == 1)
+                {
+                    livello--; // Decrementa il livello se la risposta era giusta
+                    rispostaGiusta = false;
+                    evento = false;
+                    counter = counter2;
+                }
 
-            CreaStanza();
-        }
-        else if (colliderName == "DestroyRoomDestra")
-        {
-            // Usa il livello precedente per controllare la risposta giusta
-            if (answerMatrix[livelloPrecedente, 1] == 1)
-            {
-                livello--; // Decrementa il livello se la risposta era giusta
-                rispostaGiusta = false;
-                evento = false;
-                counter = counter2;
+                StartCoroutine(DistruggiStanza("SpawnerSinistro", -90f));
             }
-
-            StartCoroutine(DistruggiStanza("SpawnerDestro", 90f));
-        }
-        else if (colliderName == "DestroyRoomSinistra")
-        {
-            // Usa il livello precedente per controllare la risposta giusta
-            if (answerMatrix[livelloPrecedente, 0] == 1)
-            {
-                livello--; // Decrementa il livello se la risposta era giusta
-                rispostaGiusta = false;
-                evento = false;
-                counter = counter2;
-            }
-
-            StartCoroutine(DistruggiStanza("SpawnerSinistro", -90f));
         }
     }
 
-    public void AvviaLivello7()
+    public void AvviaLivello7(float durata, bool distruggi, bool automatico)
     {
-        StartCoroutine(Livello7());
+        StartCoroutine(Livello7(durata, distruggi, automatico));
     }
 
-    public IEnumerator Livello7()
+    public IEnumerator Livello7(float durata, bool distruggi, bool automatico)
     {
         Animator enemyAnimator;
         GameObject nuovoCorridoio = null;
@@ -300,21 +343,35 @@ public class GameManager : MonoBehaviour
         GameObject door1 = door_1.transform.Find("Door")?.gameObject;
 
         doorScript1 = door1.GetComponent<Door>();
-        doorScript1.OpenDoor();  //apro la porta
+        if (automatico)
+        {
+            doorScript1.OpenDoor();  //apro la porta
+        }
+        
 
         nuovoCorridoio = Instantiate(CorridoioConnessoLivello7, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
 
         GameObject enemy = nuovoCorridoio.transform.Find("enemy")?.gameObject;
-
+        enemy.SetActive(true);
+        AudioSource eletc = MusicManager.instance.PlayMusic(Effect[2], transform, 0.4f);
         enemyAnimator = enemy.GetComponent<Animator>();
         enemyAnimator.SetBool("yell", true);  // imposto la animazione in yell
 
         corridoi.Add(nuovoCorridoio);
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(durata);
         luci.livello7 = -1;
-        doorScript1.OpenDoor();  //apro la porta
-        StartCoroutine(DistruggiStanza("SpawnerDestro", 90f));
+        if (automatico)
+        {
+            doorScript1.OpenDoor();  //apro la porta
+        }
+        eletc.Stop();
+        enemy.SetActive(false);
+        if (distruggi)
+        {
+            StartCoroutine(DistruggiStanza("SpawnerDestro", 90f));
+        }
+        
     }
 
     public void AvviaLivello9()
@@ -332,7 +389,31 @@ public class GameManager : MonoBehaviour
         maskAnimator = mask.GetComponent<Animator>();
         SoundFXManager.instance.PlaySoundFXClip(Effect[1], transform, 1.5f);
         yield return new WaitForSeconds(1f);
+        maskAnimator.SetBool("showMask", false);
         mask.SetActive(false);
+    }
+
+    public void AvviaLivello14()
+    {
+        StartCoroutine(Livello14());
+    }
+
+    public IEnumerator Livello14()
+    {
+        Animator maskAnimator;
+        GameObject mask = corridoi.ElementAt(corridoi.Count - 1).transform.Find("maschera")?.gameObject;
+        maskAnimator = mask.GetComponent<Animator>();
+        maskAnimator.SetBool("showMask", true);
+        maskAnimator = mask.GetComponent<Animator>();
+        SoundFXManager.instance.PlaySoundFXClip(Effect[1], transform, 1.5f);
+        yield return new WaitForSeconds(1f);
+        mask.SetActive(false);
+    }
+
+    public void AvviaLivello17()
+    {
+         Luci luciscript = corridoi.ElementAt(corridoi.Count - 1).GetComponent<Luci>();
+        luciscript.StartCoroutine(luciscript.cambiaIntensita3());
     }
 
     public void cambiaRisposte(int index, string valoreSinistra, string valoreDestra)
@@ -353,8 +434,12 @@ public class GameManager : MonoBehaviour
     {
         GameObject nuovoCorridoio = null;
         if (livello > 0 && livello < 10)
-        {
-            if (livello == 7)
+        {   
+            if(livello == 5)
+            {
+                nuovoCorridoio = Instantiate(CorridoioConnessoLivello5, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
+            }
+            else if (livello == 7)
             {
                 nuovoCorridoio = Instantiate(CorridoioConnesso, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
             }else if(livello == 9)
@@ -368,7 +453,14 @@ public class GameManager : MonoBehaviour
         }
         else if (livello >= 10 && livello < 15)
         {
-            nuovoCorridoio = Instantiate(CorridoioConnessoLivello10, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
+            if (livello == 14)
+            {
+                nuovoCorridoio = Instantiate(CorridoioConnessoLivello14, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
+            }
+            else
+            {
+                nuovoCorridoio = Instantiate(CorridoioConnessoLivello10, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
+            }
         }
         else if (livello == 15)
         {
@@ -378,6 +470,18 @@ public class GameManager : MonoBehaviour
                 GameObject Switch = nuovoCorridoio.transform.Find("switch")?.gameObject;
                 Switch.SetActive(false);  //nascondo l'interruttore inizialmente
             } 
+        }else if(livello == 17)
+        {
+            nuovoCorridoio = Instantiate(CorridoioConnessoLivello17, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
+        }else if(livello == 18 || livello == 19)
+        {
+            nuovoCorridoio = Instantiate(CorridoioConnessoLivello10, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
+            Luci luci = nuovoCorridoio.GetComponent<Luci>();
+            luci.livello7 = 1;
+        }
+        else
+        {
+            nuovoCorridoio = Instantiate(CorridoioConnessoLivello10, posizioneCorridoio, Quaternion.Euler(rotazioneCorridoio));
         }
 
         corridoi.Add(nuovoCorridoio);
@@ -401,10 +505,14 @@ public class GameManager : MonoBehaviour
     }
 
     public void ChiudiPorta()
-    {
+    {   
         StartCoroutine(WaitChiudiPorta());
-        if (rispostaGiusta)
-        {
+        if (rispostaGiusta && livello < voiceLines.Length)
+        {   
+            if(livello == 16)
+            {
+                jumpscare = true;
+            }
             StartCoroutine(sottotitoli(voiceLines[livello], 1f, Color.white));
             indexError = 0;
             counter = 0;
@@ -434,6 +542,10 @@ public class GameManager : MonoBehaviour
         {
             StartCoroutine(FadeOutAndChangeMusic(Music[1]));
             SecondaMusica = true;
+        }else if (livello >= 18 && !TerzaMusica)
+        {
+            StartCoroutine(FadeOutAndChangeMusic(Music[3]));
+            TerzaMusica = true;
         }
 
         GameObject door_1 = corridoi.ElementAt(corridoi.Count - 2).transform.Find("Door_1")?.gameObject;

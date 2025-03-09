@@ -6394,7 +6394,7 @@ Transform:
   m_GameObject: {fileID: 7155612405277804898}
   serializedVersion: 2
   m_LocalRotation: {x: 0.50000006, y: 0.49999997, z: 0.50000006, w: 0.49999997}
-  m_LocalPosition: {x: -0.09234, y: -0.013321416, z: -0.0106041655}
+  m_LocalPosition: {x: -0.09297, y: -0.013321416, z: -0.0106041655}
   m_LocalScale: {x: 0.0025314156, y: 0.009193927, z: 0.008048791}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6865,6 +6865,8 @@ MonoBehaviour:
   - {fileID: 6619424571956111822}
   - {fileID: 8173874546484448582}
   - {fileID: 2771849338575029075}
+  cylinder:
+  - {fileID: 6743642498757469152}
   livello7: 1
 --- !u!1 &7451128876688730044
 GameObject:

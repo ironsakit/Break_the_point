@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Reflection;
-using DoorScript;
-using Unity.Mathematics.Geometry;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class PlayerMovement : MonoBehaviour
@@ -29,12 +25,15 @@ public class PlayerMovement : MonoBehaviour
     private CharacterController characterController;
     public bool doorOpen = false;
     public GameObject banner;
+    int currentSceneIndex; // Ottiene l'indice della scena attuale
+    public GameManager gameManager;
 
     void Start()
     {
         // Blocca il cursore al centro dello schermo
         Cursor.lockState = CursorLockMode.Locked;
         characterController = GetComponent<CharacterController>();
+        currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
     }
 
     void Update()
@@ -42,9 +41,13 @@ public class PlayerMovement : MonoBehaviour
         OpendDoor();
         TurnSwitch();
         // Gestisci il movimento del mouse
-        MouseLook();
+        
         // Gestisci il movimento del giocatore
-        MovePlayer();
+        if (currentSceneIndex < 3)
+        {
+            MouseLook();
+            MovePlayer();
+        }
     }
 
     void OpendDoor()
@@ -59,6 +62,16 @@ public class PlayerMovement : MonoBehaviour
                 {
                     hit.transform.GetComponent<DoorScript.Door>().OpenDoor();
                     doorOpen = true;
+                    if (gameManager.livello == 20)
+                    {
+                        gameManager.StopAllSounds();
+                        SceneManager.LoadScene(2);
+                    }else if (gameManager.livello == 16 && gameManager.jumpscare)
+                    {
+                        gameManager.AvviaLivello7(1f, false, false);
+                        gameManager.jumpscare = false;
+                        gameManager.rispostaGiusta = false;
+                    }
                 }
             }   
         }
@@ -108,50 +121,44 @@ public class PlayerMovement : MonoBehaviour
 
     void MovePlayer()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-
-        Vector3 direction = transform.right * horizontal + transform.forward * vertical;
-        Vector3 movement = direction.normalized * maxSpeed * Time.deltaTime;
-
-        tempo += Time.deltaTime;
-
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (currentSceneIndex < 3)
         {
-            playerAnimator.speed = 1.4f;
-            speedSound = 0.15f;
-            maxSpeed = 15f;
-        }
-        else
-        {
+            float horizontal = Input.GetAxis("Horizontal");
+            float vertical = Input.GetAxis("Vertical");
+
+            Vector3 direction = transform.right * horizontal + transform.forward * vertical;
+            Vector3 movement = direction.normalized * maxSpeed * Time.deltaTime;
+
+            tempo += Time.deltaTime;
+
             playerAnimator.speed = 1f;
             speedSound = 0.25f;
-            maxSpeed = 10f;
-        }
 
-        // Muovi il personaggio tramite il CharacterController
-        characterController.Move(movement);
+            // Muovi il personaggio tramite il CharacterController
+            characterController.Move(movement);
 
-        // Controlla se il personaggio si sta muovendo effettivamente
-        if (tempo > (stepSounds[Index].length + speedSound) && (horizontal != 0 || vertical != 0))
-        {
-            // Usa la velocità effettiva del CharacterController per verificare il movimento
-            if (characterController.velocity.magnitude > 0.1f) // 0.1 è una soglia per evitare micro-movimenti
+            // Controlla se il personaggio si sta muovendo effettivamente
+            if (tempo > (stepSounds[Index].length + speedSound) && (horizontal != 0 || vertical != 0))
             {
-                Index++;
-                if (Index == stepSounds.Length)
+                // Usa la velocità effettiva del CharacterController per verificare il movimento
+                if (characterController.velocity.magnitude > 0.1f) // 0.1 è una soglia per evitare micro-movimenti
                 {
-                    Index = 0;
+                    Index++;
+                    if (Index == stepSounds.Length)
+                    {
+                        Index = 0;
+                    }
+                    AudioClip stepsound = stepSounds[Index];
+                    SoundFXManager.instance.PlaySoundFXClip(stepsound, transform, 0.5f);
+                    tempo = 0;
                 }
-                AudioClip stepsound = stepSounds[Index];
-                SoundFXManager.instance.PlaySoundFXClip(stepsound, transform, 0.5f);
-                tempo = 0;
             }
-        }
 
-        playerAnimator.SetFloat("Horizontal", horizontal);
-        playerAnimator.SetFloat("Vertical", vertical);
-        playerAnimator.SetFloat("Speed", characterController.velocity.magnitude);
+            playerAnimator.SetFloat("Horizontal", horizontal);
+            playerAnimator.SetFloat("Vertical", vertical);
+            playerAnimator.SetFloat("Speed", characterController.velocity.magnitude);
+        }
+        
     }
 
 

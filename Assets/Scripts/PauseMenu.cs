@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -30,6 +31,16 @@ public class PauseMenu : MonoBehaviour
     {
         MenuPause.SetActive(false);
         volume.SetActive(true);
+    }
+
+    public void Menu()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 
     public void ExitVolumeSetting()
@@ -64,7 +75,7 @@ public class PauseMenu : MonoBehaviour
     {
         if (info.name == "Info")
         {
-            Info();
+            info.SetActive(true);
         }
         MenuPause.SetActive(true);  // Attiviamo il menu
         FermaTempo();   

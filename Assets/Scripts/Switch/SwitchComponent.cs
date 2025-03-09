@@ -46,7 +46,7 @@ namespace SwitchScript
                 }
                 for (int i = 0; i < sangue.Length; i++)
                 {
-                    if (on)
+                    if (!on)
                     {
                         sangue[i].SetActive(false);
                     }

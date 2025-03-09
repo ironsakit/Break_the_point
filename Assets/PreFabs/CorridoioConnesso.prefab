@@ -3379,6 +3379,8 @@ MonoBehaviour:
   - {fileID: 2428263594432663968}
   - {fileID: 3184465506656933522}
   - {fileID: 4996196090526143806}
+  cylinder:
+  - {fileID: 5136030492989543453}
   livello7: -1
 --- !u!1 &5422311812497417532
 GameObject:
@@ -3731,7 +3733,7 @@ Transform:
   m_GameObject: {fileID: 5697615630929775978}
   serializedVersion: 2
   m_LocalRotation: {x: 0.50000006, y: 0.49999997, z: 0.50000006, w: 0.49999997}
-  m_LocalPosition: {x: -0.09234, y: -0.013321416, z: -0.0106041655}
+  m_LocalPosition: {x: -0.09281, y: -0.013321416, z: -0.0106041655}
   m_LocalScale: {x: 0.0025314156, y: 0.009193927, z: 0.008048791}
   m_ConstrainProportionsScale: 0
   m_Children:

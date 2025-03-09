@@ -64,6 +64,10 @@ public class RoomTrigger : MonoBehaviour
             }
             else if (gameObject.name == "ChiudiPorta")
             {
+                if (gameManager.livello == 17)
+                {
+                    gameManager.AvviaLivello17();
+                }
                 gameManager.ChiudiPorta();
                 gameObject.SetActive(false);
             }
@@ -75,13 +79,19 @@ public class RoomTrigger : MonoBehaviour
                     StartCoroutine(questionManagerSinistra.PlayQuestion(gameManager.leftAnswers[gameManager.livello]));
                     StartCoroutine(questionManagerDestra.PlayQuestion(gameManager.rightAnswers[gameManager.livello]));
                 }
-                if(gameManager.livello == 7 && gameManager.evento)
+                if (gameManager.livello == 7 && gameManager.evento)
                 {
-                    gameManager.AvviaLivello7();
+                    gameManager.AvviaLivello7(2f, true, true);
                     gameManager.evento = false;
-                }else if (gameManager.livello == 9 && gameManager.evento)
+                }
+                else if (gameManager.livello == 9 && gameManager.evento)
                 {
                     gameManager.AvviaLivello9();
+                    gameManager.evento = false;
+                }
+                else if (gameManager.livello == 14 && gameManager.evento)
+                {
+                    gameManager.AvviaLivello14();
                     gameManager.evento = false;
                 }
                 gameObject.SetActive(false);
