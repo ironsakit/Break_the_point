@@ -1,8 +1,8 @@
 # PORTAL PARADOX
 
-**Sviluppatore:** ironsakit121
-**Link del gioco:** https://ironsakit121.itch.io/portal-paradox
-**Genere:** Horror psicologico in prima persona / Puzzle
+* **Sviluppatore:** ironsakit121
+* **Link del gioco:** https://ironsakit121.itch.io/portal-paradox
+* **Genere:** Horror psicologico in prima persona / Puzzle
 
 ---
 
@@ -21,26 +21,14 @@ Ogni corridoio ti presenterà una domanda e due possibili risposte. Scegli corre
 
 ---
 
-## ⚙️ INSTALLAZIONE E AVVIO (Versione Windows .exe)
+##  RISOLUZIONE DEI PROBLEMI / BUG NOTI
 
-1. Scarica il file compresso (.zip o .rar) da itch.io.
-2. Estrai il contenuto in una cartella vuota sul tuo PC (Non avviare il gioco direttamente dal file compresso).
-3. Fai doppio clic su "Portal Paradox.exe" (o il nome del tuo file eseguibile) per avviare il gioco.
-4. Per l'esperienza migliore, si consiglia di giocare con le cuffie e a luci spente.
-
-*Nota: È disponibile anche una versione HTML giocabile da browser sulla pagina itch.io, ma ha una grafica notevolmente ridotta. La versione scaricabile (.exe) è fortemente raccomandata per vivere a pieno l'esperienza horror e le performance ottimali.*
-
----
-
-## 🐛 RISOLUZIONE DEI PROBLEMI / BUG NOTI
-
-* Se il gioco dovesse bloccarsi o presentare glitch visivi, prova a riavviare l'applicazione.
-* [Spazio opzionale: Aggiungi qui eventuali problemi noti, es. "La risoluzione ultrawide non è attualmente supportata al 100%"]
+Questo gioco era una prova, ci sono alcuni bug, cerca di scoprire quali!
 
 ---
 
 ## ✉️ CONTATTI E SUPPORTO
 
-Grazie per aver giocato a Portal Paradox! Se il gioco ti è piaciuto, considera di lasciare un commento o una recensione sulla pagina itch.io. I feedback sono fondamentali per migliorare.
+Grazie per aver giocato a Portal Paradox! Se il gioco ti è piaciuto, considera di lasciare un commento o una recensione sulla pagina itch.io.
 
 Pagina Itch.io: https://ironsakit121.itch.io/
