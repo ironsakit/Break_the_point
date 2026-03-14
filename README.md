@@ -44,4 +44,3 @@ Ogni corridoio ti presenterà una domanda e due possibili risposte. Scegli corre
 Grazie per aver giocato a Portal Paradox! Se il gioco ti è piaciuto, considera di lasciare un commento o una recensione sulla pagina itch.io. I feedback sono fondamentali per migliorare.
 
 Pagina Itch.io: https://ironsakit121.itch.io/
-[Spazio opzionale: Inserisci qui il tuo Twitter/X, Instagram o server Discord se ne hai uno]
